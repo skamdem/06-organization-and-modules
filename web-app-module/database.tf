@@ -1,5 +1,6 @@
 resource "aws_db_instance" "default" {
   allocated_storage   = 10
+  identifier          = var.subdomain
   storage_type        = "standard"
   engine              = "postgres"
   engine_version      = "12"

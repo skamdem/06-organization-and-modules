@@ -16,13 +16,17 @@ resource "aws_security_group" "alb_sg" {
   name = "${var.app_name}-${var.environment_name}-alb-security-group"
 }
 
-resource "aws_security_group_rule" "allow_alb_http_inbound" {
+resource "aws_security_group_rule" "alb_ingress_rules" {
+  count = length(var.alb_ingress_rules)
+
   type              = "ingress"
   security_group_id = aws_security_group.alb_sg.id
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+
+  from_port   = var.alb_ingress_rules[count.index].from_port
+  to_port     = var.alb_ingress_rules[count.index].to_port
+  protocol    = var.alb_ingress_rules[count.index].protocol
+  cidr_blocks = [var.alb_ingress_rules[count.index].cidr_blocks]
+  description = var.alb_ingress_rules[count.index].description
 }
 
 resource "aws_security_group_rule" "allow_alb_all_outbound" {
@@ -54,6 +58,40 @@ resource "aws_lb_listener" "http_listener" {
       message_body = "Sorry nothing here -:)"
       status_code  = "200"
     }
+  }
+}
+
+resource "aws_lb_listener" "https_listener" {
+  load_balancer_arn = aws_lb.load_balancer.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = var.certificate_arn
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Sorry nothing here -:)"
+      status_code  = "200"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "custom_rule_https" {
+  listener_arn = aws_lb_listener.https_listener.arn
+  priority     = 50
+
+  condition {
+    path_pattern {
+      values = ["*"]
+    }
+  }
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.main_target_group.arn
   }
 }
 

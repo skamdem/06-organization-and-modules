@@ -1,8 +1,35 @@
+# variables definition for "web-app-module"
+
 # General variables
 variable "app_name" {
   type        = string
   default     = "web-app"
   description = "Name of the web application"
+}
+
+# ALB variables
+variable "alb_ingress_rules" {
+  type = list(object({
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = string
+    description = string
+  }))
+  default = [
+    { from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = "0.0.0.0/0"
+      description = "ordinary request"
+    },
+    { from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = "0.0.0.0/0"
+      description = "encrypted request"
+    },
+  ]
 }
 
 variable "environment_name" {
@@ -62,4 +89,10 @@ variable "db_pass" {
   type        = string
   description = "Password of DB."
   sensitive   = true
+}
+
+# certificates
+variable "certificate_arn" {
+  type        = string
+  description = "arn of certificate for teh ALB listener"
 }
