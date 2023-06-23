@@ -2,6 +2,7 @@
 # and backend setup for the root module
 
 terraform {
+  required_version = "~> 1.5.0" # i.e. >= 1.5.0, < 1.6
 
   # Remote backend specified as S3 bucket
   backend "s3" {
