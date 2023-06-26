@@ -7,6 +7,29 @@ variable "app_name" {
   description = "Name of the web application"
 }
 
+variable "environment_name" {
+  type        = string
+  default     = "dev"
+  description = "Deployment environment (dev/staging/production)"
+}
+
+# Route 53 variables
+variable "domain" {
+  type        = string
+  description = "Domain for website."
+}
+
+variable "subdomain" {
+  type        = string
+  description = "Subdomain for website."
+}
+
+variable "create_dns_record" {
+  type        = bool
+  default     = false
+  description = "If true, create new record for $${var.subdomain} in route53 zone of $${var.domain}."
+}
+
 # ALB variables
 variable "alb_ingress_rules" {
   type = list(object({
@@ -32,12 +55,6 @@ variable "alb_ingress_rules" {
   ]
 }
 
-variable "environment_name" {
-  type        = string
-  default     = "dev"
-  description = "Deployment environment (dev/staging/production)"
-}
-
 # EC2 variables
 variable "instance_ami" {
   type        = string
@@ -55,23 +72,6 @@ variable "instance_type" {
 variable "bucket_prefix" {
   type        = string
   description = "The prefix of s3 bucket for app data."
-}
-
-# Route 53 variables
-variable "domain" {
-  type        = string
-  description = "Domain for website."
-}
-
-variable "subdomain" {
-  type        = string
-  description = "Subdomain for website."
-}
-
-variable "create_dns_record" {
-  type        = bool
-  default     = false
-  description = "If true, create new record for $${var.subdomain} in route53 zone of $${var.domain}."
 }
 
 # RDS variables
@@ -94,5 +94,5 @@ variable "db_pass" {
 # certificates
 variable "certificate_arn" {
   type        = string
-  description = "arn of certificate for teh ALB listener"
+  description = "arn of certificate for the ALB listener"
 }

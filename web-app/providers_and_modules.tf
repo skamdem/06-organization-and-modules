@@ -42,10 +42,10 @@ module "web_app_2" {
   certificate_arn   = module.acm.acm_certificate_arn //var.certificate_arn
 }
 
-locals {
-  prefix_of_subdomain_1 = var.environment_name_1 == "production" ? "" : "${var.environment_name_1}."
-  prefix_of_subdomain_2 = var.environment_name_2 == "production" ? "" : "${var.environment_name_2}."
-}
+# locals {
+#   prefix_of_subdomain_1 = var.environment_name_1 == "production" ? "" : "${var.environment_name_1}."
+#   prefix_of_subdomain_2 = var.environment_name_2 == "production" ? "" : "${var.environment_name_2}."
+# }
 
 # Module to create and validate the AWS certificate
 module "acm" {
