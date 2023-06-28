@@ -13,7 +13,7 @@ data "aws_subnets" "set_of_subnet_ids" { # assumed public subnets
 }
 
 resource "aws_security_group" "alb_sg" {
-  name = "${var.app_name}-${var.environment_name}-alb-security-group"
+  name = "${var.environment_name}-${var.app_name}-alb-sg"
 }
 
 resource "aws_security_group_rule" "alb_ingress_rules" {
@@ -144,7 +144,7 @@ resource "aws_lb_target_group_attachment" "instance_2" {
 # instances section
 # security group for the 2 instances
 resource "aws_security_group" "instances_sg" {
-  name = "${var.app_name}-${var.environment_name}-instance-security-group"
+  name = "${var.environment_name}-${var.app_name}-instance-sg"
 }
 
 resource "aws_security_group_rule" "allow_instance_http_inbound" {
